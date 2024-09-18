@@ -43,8 +43,8 @@ export default function CriarLicao() {
       <TextInput
         placeholder="Conteúdo da Lição"
         value={conteudo}
-        onChangeText={(text) => setConteudo(text.slice(0, 8))} // Limita o texto a 8 caracteres
-        maxLength={100} // Limita o campo a 8 caracteres
+        onChangeText={(text) => setConteudo(text.slice(0, 100))} 
+        maxLength={100}
       />
 
       <TextInput

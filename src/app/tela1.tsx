@@ -32,7 +32,7 @@ const CursosList = () => {
   const renderCursoCard = ({ item }: { item: Curso }) => (
     <TouchableOpacity 
       style={styles.card} 
-      onPress={() => router.push(`/unidades/${item.id}`)}
+      onPress={() => router.push('/unidades/${item.id}')}
     >
       <Text style={styles.cursoNome}>{item.nomeCurso}</Text>
       <Text style={styles.cursoResumo}>{item.resumo}</Text>
