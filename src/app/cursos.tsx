@@ -14,7 +14,7 @@ const CursosList = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const router = useRouter();
 
-  // Função para buscar os cursos do Firebase
+  // Buscando cursos do firebase
   const fetchCursos = async () => {
     const querySnapshot = await getDocs(collection(db, 'Curso'));
     const cursosList: Curso[] = querySnapshot.docs.map((doc) => ({
@@ -28,11 +28,11 @@ const CursosList = () => {
     fetchCursos();
   }, []);
 
-  // Renderizar cada card de curso
+  // Renderizar os cards clicáveis e passar o ID do curso
   const renderCursoCard = ({ item }: { item: Curso }) => (
     <TouchableOpacity 
       style={styles.card} 
-      onPress={() => router.push('/unidades/${item.id}')}
+      onPress={() => router.push(`/unidades/unidadeV?id=${item.id}`)}
     >
       <Text style={styles.cursoNome}>{item.nomeCurso}</Text>
       <Text style={styles.cursoResumo}>{item.resumo}</Text>
