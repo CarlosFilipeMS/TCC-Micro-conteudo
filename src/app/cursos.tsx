@@ -14,7 +14,7 @@ const CursosList = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const router = useRouter();
 
-  // Buscando cursos do firebase
+  // Buscando do firebase
   const fetchCursos = async () => {
     const querySnapshot = await getDocs(collection(db, 'Curso'));
     const cursosList: Curso[] = querySnapshot.docs.map((doc) => ({

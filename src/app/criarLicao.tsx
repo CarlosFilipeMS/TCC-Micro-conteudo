@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, Alert, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, TextInput, SafeAreaView, Button, Alert, FlatList, TouchableOpacity, StyleSheet } from "react-native";
 import { db } from "../config/firebase-config";
 import { addDoc, collection, getDocs, doc } from "firebase/firestore";
 
 export default function CriarLicao() {
-  const [titulo, setTitulo] = useState(""); // Novo estado para o título
+  const [titulo, setTitulo] = useState("");
   const [conteudo, setConteudo] = useState("");
   const [imagem, setImagem] = useState("");
-  const [unidade, setUnidade] = useState<string | null>(null); // Será uma referência, não string simples
-  const [ordem, setOrdem] = useState<number | null>(null); // Novo campo para definir a ordem da lição
-  const [unidades, setUnidades] = useState<any[]>([]); // Lista de unidades para o usuário selecionar
+  const [unidade, setUnidade] = useState<string | null>(null); // referência
+  const [ordem, setOrdem] = useState<number | null>(null);
+  const [unidades, setUnidades] = useState<any[]>([]); // Lista de unidades
 
-  // Função para buscar as unidades do Firestore
+
   const fetchUnidades = async () => {
     try {
       const querySnapshot = await getDocs(collection(db, "Unidade"));
@@ -43,13 +43,13 @@ export default function CriarLicao() {
         titulo: titulo,
         conteudo: conteudo,
         imagem: imagem,
-        unidade: unidadeRef,  // Armazenar a referência ao documento da unidade
-        ordem: ordem          // Adicionar o campo de ordem
+        unidade: unidadeRef,  
+        ordem: ordem          
       });
 
       Alert.alert("Sucesso", `Lição criada com ID: ${docRef.id}`);
 
-      // Limpar os campos após a criação
+
       setTitulo("");
       setConteudo("");
       setImagem("");
@@ -62,61 +62,108 @@ export default function CriarLicao() {
   };
 
   return (
-    <View>
-      <Text>Criar Nova Lição</Text>
+    <View
+      style={styles.container}
+    >
+      <View
+        style={styles.formDiv}
+      >
+        <Text>Criar Nova Lição</Text>
 
-      <TextInput
-        placeholder="Título da Lição"
-        value={titulo}
-        onChangeText={(text) => setTitulo(text.slice(0, 25))} // Limitar o título a 25 caracteres
-        maxLength={25}
-      />
-
-      <TextInput
-        placeholder="Conteúdo da Lição"
-        value={conteudo}
-        onChangeText={setConteudo} 
-        maxLength={100}
-      />
-
-      <TextInput
-        placeholder="URL da Imagem"
-        value={imagem}
-        onChangeText={setImagem}
-      />
-
-      <TextInput
-        placeholder="Ordem da Lição (número inteiro)"
-        value={ordem ? ordem.toString() : ""}
-        onChangeText={(text) => setOrdem(parseInt(text, 10))}
-        keyboardType="numeric" // Teclado numérico para facilitar a entrada de números
-      />
-
-      <Text>Selecione a Unidade:</Text>
-      {unidades.length > 0 ? (
-        <FlatList
-          data={unidades}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={{
-                padding: 10,
-                backgroundColor: unidade === item.id ? '#ddd' : '#fff',
-                marginBottom: 10,
-                borderWidth: 1,
-                borderColor: '#ccc',
-              }}
-              onPress={() => setUnidade(item.id)} // Salva o id da unidade selecionada
-            >
-              <Text>{item.nomeUnidade}</Text>
-            </TouchableOpacity>
-          )}
+        <TextInput
+          placeholder="Título da Lição"
+          value={titulo}
+          onChangeText={(text) => setTitulo(text.slice(0, 25))} // Limitar o título a 25 caracteres
+          maxLength={25}
+          style={styles.normalInput}
         />
-      ) : (
-        <Text>Carregando unidades...</Text>
-      )}
+        <SafeAreaView
+          style={styles.conteudoInput}
+        >
+        <TextInput
+          placeholder="Conteúdo da Lição"
+          multiline
+          value={conteudo}
+          onChangeText={setConteudo} 
+          maxLength={100}
+        />
+        </SafeAreaView>
 
-      <Button title="Criar Lição" onPress={criarLicao} />
+        <TextInput
+          placeholder="URL da Imagem"
+          value={imagem}
+          onChangeText={setImagem}
+          style={styles.normalInput}
+        />
+
+        <TextInput
+          placeholder="Ordem da Lição (número inteiro)"
+          value={ordem ? ordem.toString() : ""}
+          onChangeText={(text) => setOrdem(parseInt(text, 10))}
+          keyboardType="numeric" // Teclado numérico para facilitar a entrada de números
+          style={styles.normalInput}
+        />
+
+        <Text>Selecione a Unidade:</Text>
+        {unidades.length > 0 ? (
+          <FlatList
+            data={unidades}
+            keyExtractor={(item) => item.id}
+            style={styles.selectUnidade}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={{
+                  padding: 10,
+                  backgroundColor: unidade === item.id ? '#ddd' : '#fff',
+                  marginBottom: 10,
+                  borderWidth: 1,
+                  borderColor: '#ccc',
+                }}
+                onPress={() => setUnidade(item.id)}
+              >
+                <Text>{item.nomeUnidade}</Text>
+              </TouchableOpacity>
+            )}
+          />
+        ) : (
+          <Text>Carregando unidades...</Text>
+        )}
+
+        <Button title="Criar Lição" onPress={criarLicao} />
+      </View>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container:{
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  formDiv: {
+    width: "80%",
+    height: "80%",
+  },
+  normalInput: {
+    marginTop: 10,
+    borderColor: "black",
+    borderRadius: 5,
+    backgroundColor: "grey",
+    borderWidth: 1,
+    height: "6%",
+  },
+  conteudoInput: {
+    marginTop: 10,
+    borderColor: "black",
+    borderRadius: 5,
+    backgroundColor: "grey",
+    borderWidth: 1,
+    height: "25%",
+  },
+  selectUnidade: {
+
+  },
+  
+})
