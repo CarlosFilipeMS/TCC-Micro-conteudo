@@ -5,8 +5,8 @@ export default function Home(){
 
     return(
         <View>
-            <Button title='Tela 1' onPress={() => router.push('/cursos')}/>
-            <Button title='Tela 2' onPress={() => router.push('/criarLicao')}/>
+            <Button title='Cursos' onPress={() => router.push('/cursos')}/>
+            <Button title='Criar Tela' onPress={() => router.push('/criarLicao')}/>
         </View>
     )
 }

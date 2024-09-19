@@ -4,9 +4,11 @@ import { db } from "../config/firebase-config";
 import { addDoc, collection, getDocs, doc } from "firebase/firestore";
 
 export default function CriarLicao() {
+  const [titulo, setTitulo] = useState(""); // Novo estado para o título
   const [conteudo, setConteudo] = useState("");
   const [imagem, setImagem] = useState("");
   const [unidade, setUnidade] = useState<string | null>(null); // Será uma referência, não string simples
+  const [ordem, setOrdem] = useState<number | null>(null); // Novo campo para definir a ordem da lição
   const [unidades, setUnidades] = useState<any[]>([]); // Lista de unidades para o usuário selecionar
 
   // Função para buscar as unidades do Firestore
@@ -29,8 +31,8 @@ export default function CriarLicao() {
 
   // Função para criar uma nova lição no Firestore
   const criarLicao = async () => {
-    if (!conteudo || !imagem || !unidade) {
-      Alert.alert("Erro", "Por favor, preencha todos os campos.");
+    if (!titulo || !conteudo || !imagem || !unidade || ordem === null) {
+      Alert.alert("Erro", "Por favor, preencha todos os campos, incluindo a ordem.");
       return;
     }
 
@@ -38,17 +40,21 @@ export default function CriarLicao() {
       const unidadeRef = doc(db, "Unidade", unidade); // Criar uma referência ao documento da unidade
 
       const docRef = await addDoc(collection(db, "Licao"), {
+        titulo: titulo,
         conteudo: conteudo,
         imagem: imagem,
-        unidade: unidadeRef, // Armazenar a referência ao documento da unidade
+        unidade: unidadeRef,  // Armazenar a referência ao documento da unidade
+        ordem: ordem          // Adicionar o campo de ordem
       });
 
       Alert.alert("Sucesso", `Lição criada com ID: ${docRef.id}`);
 
       // Limpar os campos após a criação
+      setTitulo("");
       setConteudo("");
       setImagem("");
       setUnidade(null);
+      setOrdem(null);
     } catch (error) {
       Alert.alert("Erro", "Falha ao criar a lição. Tente novamente.");
       console.error("Erro ao criar lição: ", error);
@@ -60,9 +66,16 @@ export default function CriarLicao() {
       <Text>Criar Nova Lição</Text>
 
       <TextInput
+        placeholder="Título da Lição"
+        value={titulo}
+        onChangeText={(text) => setTitulo(text.slice(0, 25))} // Limitar o título a 25 caracteres
+        maxLength={25}
+      />
+
+      <TextInput
         placeholder="Conteúdo da Lição"
         value={conteudo}
-        onChangeText={(text) => setConteudo(text.slice(0, 100))} 
+        onChangeText={setConteudo} 
         maxLength={100}
       />
 
@@ -70,6 +83,13 @@ export default function CriarLicao() {
         placeholder="URL da Imagem"
         value={imagem}
         onChangeText={setImagem}
+      />
+
+      <TextInput
+        placeholder="Ordem da Lição (número inteiro)"
+        value={ordem ? ordem.toString() : ""}
+        onChangeText={(text) => setOrdem(parseInt(text, 10))}
+        keyboardType="numeric" // Teclado numérico para facilitar a entrada de números
       />
 
       <Text>Selecione a Unidade:</Text>
