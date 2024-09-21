@@ -85,7 +85,7 @@ export default function CriarLicao() {
           multiline
           value={conteudo}
           onChangeText={setConteudo} 
-          maxLength={100}
+          maxLength={300}
         />
         </SafeAreaView>
 
@@ -148,14 +148,13 @@ const styles = StyleSheet.create({
   },
   normalInput: {
     marginTop: 10,
-    borderColor: "black",
-    borderRadius: 5,
+    borderColor: "grey",
     borderWidth: 1,
     height: "6%",
   },
   conteudoInput: {
     marginTop: 10,
-    borderColor: "black",
+    borderColor: "grey",
     borderRadius: 5,
     borderWidth: 1,
     height: "25%",

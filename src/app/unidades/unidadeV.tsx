@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, ProgressBarAndroid } from 'react-native';
 import { db } from '../../config/firebase-config';
 import { collection, query, where, getDocs, doc } from 'firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -7,7 +7,8 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 interface Unidade {
   id: string;
   nomeUnidade: string;
-  referenciaCurso: string; 
+  referenciaCurso: string;
+  progresso: number; // Campo progresso adicionado
 }
 
 const UnidadeV = () => {
@@ -40,11 +41,25 @@ const UnidadeV = () => {
   const renderUnidadeItem = ({ item }: { item: Unidade }) => (
     <TouchableOpacity 
       style={styles.card}
-      onPress={() => router.push(`/licoes/licaoV?id=${item.id}`)}
+      onPress={() => router.push(`/licoes/licaoV?id=${item.id}&cursoId=${id}`)} // Adiciona o cursoId na navegação
     >
       <Text style={styles.unidadeNome}>{item.nomeUnidade}</Text>
+
+      {item.progresso !== undefined && (
+        <View style={styles.progressContainer}>
+          <Text style={styles.progressoText}>Progresso: {Math.round(item.progresso)}%</Text>
+          <ProgressBarAndroid 
+            styleAttr="Horizontal"
+            indeterminate={false}
+            progress={item.progresso / 100}
+            color="#4caf50"
+          />
+        </View>
+      )}
     </TouchableOpacity>
   );
+
+
 
   return (
     <View style={styles.container}>
@@ -80,6 +95,13 @@ const styles = StyleSheet.create({
   unidadeNome: {
     fontSize: 18,
     fontWeight: 'bold',
+  },
+  progressContainer: {
+    marginTop: 10,
+  },
+  progressoText: {
+    fontSize: 14,
+    marginBottom: 4,
   },
 });
 
