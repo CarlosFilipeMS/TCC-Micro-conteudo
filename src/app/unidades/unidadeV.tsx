@@ -8,7 +8,7 @@ interface Unidade {
   id: string;
   nomeUnidade: string;
   referenciaCurso: string;
-  progresso: number; // Campo progresso adicionado
+  progresso: number; 
 }
 
 const UnidadeV = () => {

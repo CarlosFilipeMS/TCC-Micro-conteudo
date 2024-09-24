@@ -14,22 +14,21 @@ interface Licao {
 }
 
 const LicaoV = () => {
-    const { id, cursoId } = useLocalSearchParams(); // Agora capturamos o cursoId também
+    const { id, cursoId } = useLocalSearchParams();
     const [licoes, setLicoes] = useState<Licao[]>([]);
     const [currentIndex, setCurrentIndex] = useState(0); 
-    const router = useRouter(); // Para navegação de volta às unidades
+    const router = useRouter();
 
-    // Buscar as lições de uma unidade
+    // Fetch das lições de uma unidade
     const fetchLicoes = async () => {
         if (id) {
             try {
                 const unidadeRef = doc(db, 'Unidade', id as string);
 
-                // Query das lições que fazem referência à unidade
                 const licoesQuery = query(
                     collection(db, 'Licao'),
                     where('unidade', '==', unidadeRef),
-                    orderBy('ordem') // Ordenando pelas lições
+                    orderBy('ordem')
                 );
 
                 const querySnapshot = await getDocs(licoesQuery);
@@ -49,7 +48,7 @@ const LicaoV = () => {
         fetchLicoes();
     }, [id]);
 
-    // Função para calcular o progresso
+    // Calcular o progresso
     const calcularProgresso = () => {
         if (licoes.length > 0) {
             return ((currentIndex + 1) / licoes.length) * 100; // Progresso em porcentagem
@@ -57,7 +56,7 @@ const LicaoV = () => {
         return 0;
     };
 
-    // Atualizar progresso da unidade no Firestore
+    // Atualizar progresso no Firestore
     const atualizarProgresso = async () => {
         if (id) {
             const unidadeRef = doc(db, 'Unidade', id as string);
@@ -65,7 +64,7 @@ const LicaoV = () => {
 
             try {
                 await updateDoc(unidadeRef, {
-                    progresso: progresso, // Atualiza o progresso da unidade
+                    progresso: progresso,
                 });
             } catch (error) {
                 console.error('Erro ao atualizar progresso:', error);
