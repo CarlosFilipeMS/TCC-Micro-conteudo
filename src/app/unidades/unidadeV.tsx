@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, ProgressBarAndroid 
 import { db } from '../../config/firebase-config';
 import { collection, query, where, getDocs, doc } from 'firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import NavBar from '../../components/navbar'
 
 interface Unidade {
   id: string;
@@ -39,6 +40,7 @@ const UnidadeV = () => {
   }, [id]);
 
   const renderUnidadeItem = ({ item }: { item: Unidade }) => (
+
     <TouchableOpacity 
       style={styles.card}
       onPress={() => router.push(`/licoes/licaoV?id=${item.id}&cursoId=${id}`)} // Adiciona o cursoId na navegação
@@ -62,7 +64,11 @@ const UnidadeV = () => {
 
 
   return (
+    
     <View style={styles.container}>
+      <NavBar
+        title='Unidades'
+      />
       {unidades.length > 0 ? (
         <FlatList
           data={unidades}

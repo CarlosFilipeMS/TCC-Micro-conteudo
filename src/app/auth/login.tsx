@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, Text, TextInput, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import CustomButton from '../../components/botao';
@@ -38,7 +38,7 @@ export default function LoginScreen(props: LoginScreenProps) {
         values.email,
         values.password
       );
-      router.push('/')
+      router.push('/cursos')
       alert('Usuário autenticado com sucesso!');
 
     } catch (error) {
@@ -90,6 +90,14 @@ export default function LoginScreen(props: LoginScreenProps) {
                 )}
 
                 <CustomButton onPress={handleSubmit as any} title="Entrar" color="black" />
+                
+                {/* Botão de Cadastro */}
+                <TouchableOpacity 
+                  style={styles.registerButton} 
+                  onPress={() => router.push('/auth/cadastro')}
+                >
+                  <Text style={styles.registerText}>Cadastrar</Text>
+                </TouchableOpacity>
               </View>
             )}
           </Formik>
@@ -158,5 +166,20 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
     marginBottom: 6,
+  },
+  registerButton: {
+    marginTop: 10,
+    padding: 10,
+    backgroundColor: '#444444',
+    borderRadius: 4,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: '#444444',
+  },
+  registerText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });

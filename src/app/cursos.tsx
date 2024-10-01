@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet } from 'react-native
 import { db } from '../config/firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'expo-router';
+import { getAuth, onAuthStateChanged } from 'firebase/auth'; // Importação para autenticação
 
 interface Curso {
   id: string;
@@ -13,8 +14,9 @@ interface Curso {
 const CursosList = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
   const router = useRouter();
+  const auth = getAuth(); // Instância de autenticação
 
-  // Buscando do firebase
+  // Função para buscar cursos do Firestore
   const fetchCursos = async () => {
     const querySnapshot = await getDocs(collection(db, 'Curso'));
     const cursosList: Curso[] = querySnapshot.docs.map((doc) => ({
@@ -25,7 +27,19 @@ const CursosList = () => {
   };
 
   useEffect(() => {
-    fetchCursos();
+    // Verificar estado de autenticação
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        // Se não houver usuário autenticado, redirecionar para a página de login
+        router.push('/auth/login');
+      } else {
+        // Se houver usuário autenticado, buscar cursos
+        fetchCursos();
+      }
+    });
+
+    // Limpar inscrição quando o componente for desmontado
+    return () => unsubscribe();
   }, []);
 
   // Renderizar os cards clicáveis e passar o ID do curso

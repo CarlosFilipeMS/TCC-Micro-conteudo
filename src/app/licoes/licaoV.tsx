@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import { db } from '../../config/firebase-config';
 import { collection, query, where, getDocs, doc, orderBy, updateDoc } from 'firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
+import NavBar from '../../components/navbar';
 
 
 interface Licao {
@@ -109,6 +110,9 @@ const LicaoV = () => {
 
     return (
         <View style={styles.container}>
+            <NavBar
+                title='Unidades'
+            />
             {renderCurrentLicao()}
 
             <View style={styles.navigation}>
