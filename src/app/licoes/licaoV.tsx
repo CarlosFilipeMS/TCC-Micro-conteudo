@@ -108,11 +108,14 @@ const LicaoV = () => {
     // Renderizar a lição atual
     const renderCurrentLicao = () => {
         if (licoes.length === 0) return <Text>Nenhuma lição encontrada para esta unidade.</Text>;
-
+    
         const licao = licoes[currentIndex];
         return (
             <View style={styles.card}>
-                <Image source={{ uri: licao.imagem }} style={styles.image} />
+                {/* Renderizar a imagem apenas se o campo imagem estiver preenchido */}
+                {licao.imagem ? (
+                    <Image source={{ uri: licao.imagem }} style={styles.image} />
+                ) : null}
                 <Text style={styles.licaoTitulo}>{licao.titulo}</Text>
                 <Text style={styles.licaoConteudo}>{licao.conteudo}</Text>
             </View>
