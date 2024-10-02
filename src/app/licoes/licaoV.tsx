@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, Button } from 'react-native';
 import { db } from '../../config/firebase-config';
-import { collection, query, where, getDocs, doc, orderBy, updateDoc } from 'firebase/firestore';
+import { collection, query, where, getDocs, getDoc, doc, orderBy, updateDoc } from 'firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import NavBar from '../../components/navbar';
 
@@ -57,16 +57,27 @@ const LicaoV = () => {
         return 0;
     };
 
-    // Atualizar progresso no Firestore
+    // Atualizar progresso no Firestore 
     const atualizarProgresso = async () => {
         if (id) {
             const unidadeRef = doc(db, 'Unidade', id as string);
-            const progresso = calcularProgresso();
-
             try {
-                await updateDoc(unidadeRef, {
-                    progresso: progresso,
-                });
+                // Buscar o progresso salvo
+                const unidadeSnap = await getDoc(unidadeRef);
+                const progressoAtual = unidadeSnap.exists() ? unidadeSnap.data().progresso : 0;
+
+                // Bucando progresso atual
+                const progressoCorrente = calcularProgresso();
+
+                // Comparando e atualizando
+                if (progressoCorrente > progressoAtual) {
+                    await updateDoc(unidadeRef, {
+                        progresso: progressoCorrente,
+                    });
+                    console.log(`Progresso atualizado para: ${progressoCorrente}%`);
+                } else {
+                    console.log('Progresso já está maior ou igual, não foi atualizado.');
+                }
             } catch (error) {
                 console.error('Erro ao atualizar progresso:', error);
             }

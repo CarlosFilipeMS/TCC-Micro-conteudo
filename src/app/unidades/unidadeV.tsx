@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, ProgressBarAndroid } from 'react-native';
 import { db } from '../../config/firebase-config';
 import { collection, query, where, getDocs, doc } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { ProgressBar } from 'react-native-paper'; 
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import NavBar from '../../components/navbar'
+import NavBar from '../../components/navbar';
 
 interface Unidade {
   id: string;
@@ -40,35 +41,28 @@ const UnidadeV = () => {
   }, [id]);
 
   const renderUnidadeItem = ({ item }: { item: Unidade }) => (
-
     <TouchableOpacity 
       style={styles.card}
-      onPress={() => router.push(`/licoes/licaoV?id=${item.id}&cursoId=${id}`)} // Adiciona o cursoId na navegação
+      onPress={() => router.push(`/licoes/licaoV?id=${item.id}&cursoId=${id}`)}
     >
       <Text style={styles.unidadeNome}>{item.nomeUnidade}</Text>
 
       {item.progresso !== undefined && (
         <View style={styles.progressContainer}>
           <Text style={styles.progressoText}>Progresso: {Math.round(item.progresso)}%</Text>
-          <ProgressBarAndroid 
-            styleAttr="Horizontal"
-            indeterminate={false}
+          <ProgressBar 
             progress={item.progresso / 100}
             color="#4caf50"
+            style={styles.progressBar}
           />
         </View>
       )}
     </TouchableOpacity>
   );
 
-
-
   return (
-    
     <View style={styles.container}>
-      <NavBar
-        title='Unidades'
-      />
+      <NavBar title="Unidades" />
       {unidades.length > 0 ? (
         <FlatList
           data={unidades}
@@ -108,6 +102,9 @@ const styles = StyleSheet.create({
   progressoText: {
     fontSize: 14,
     marginBottom: 4,
+  },
+  progressBar: {
+    height: 3, 
   },
 });
 
