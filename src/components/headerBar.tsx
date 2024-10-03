@@ -14,9 +14,9 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ title, backTo }) => {
 
   const handleBackPress = () => {
     if (backTo) {
-      router.push(backTo); // Navega para a rota especificada
+      router.push(backTo); // Especificar rota para voltar
     } else {
-      router.back(); // Comportamento padrão: voltar à última página
+      router.back();
     }
   };
 
