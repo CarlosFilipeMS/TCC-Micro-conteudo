@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
 import { ProgressBar } from 'react-native-paper'; 
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import NavBar from '../../components/navbar';
+import HeaderBar from '../../components/headerBar';
 
 interface Unidade {
   id: string;
@@ -62,7 +62,7 @@ const UnidadeV = () => {
 
   return (
     <View style={styles.container}>
-      <NavBar title="Unidades" />
+      <HeaderBar title='Unidades' backTo='/'/>
       {unidades.length > 0 ? (
         <FlatList
           data={unidades}
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#fff',
   },
   card: {
     backgroundColor: '#fff',

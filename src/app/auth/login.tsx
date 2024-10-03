@@ -38,7 +38,7 @@ export default function LoginScreen(props: LoginScreenProps) {
         values.email,
         values.password
       );
-      router.push('/cursos')
+      router.push('/')
       alert('Usuário autenticado com sucesso!');
 
     } catch (error) {
@@ -50,9 +50,8 @@ export default function LoginScreen(props: LoginScreenProps) {
     <View style={styles.background}>
       <View style={styles.content}>
         <View style={styles.cabecalho}>
-          <Text style={styles.textLogo}>NanoK</Text>
           <View style={styles.authIconView}>
-            <Image style={styles.authIcon} source={require('../../../assets/authIcons/conecte-se.png')} />
+            <Image style={styles.authIcon} source={require('../../../assets/logo/logo.png')} />
           </View>
           <Text style={styles.titlePage}>Login</Text>
         </View>
@@ -111,7 +110,7 @@ const styles = StyleSheet.create({
   background: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#adec94',
+    backgroundColor: '#6ddbd7',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cabecalho: {
-    width: '70%',
+    width: '100%',
     height: '40%',
     marginTop: '20%',
     alignItems: 'center',
@@ -139,8 +138,8 @@ const styles = StyleSheet.create({
   },
   authIcon: {
     alignItems: 'center',
-    width: 180,
-    height: 180,
+    width: '200%',
+    height: '200%',
   },
   titlePage: {
     fontSize: 30,
@@ -159,6 +158,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 2,
     borderColor: 'black',
+    backgroundColor: 'white',
     padding: 6,
     marginBottom: 4,
     borderRadius: 4,

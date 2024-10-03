@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image, Button } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { db } from '../../config/firebase-config';
 import { collection, query, where, getDocs, getDoc, doc, orderBy, updateDoc } from 'firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
-import NavBar from '../../components/navbar';
-
+import HeaderBar from '../../components/headerBar';
+import CustomButton from '../../components/botao';
 
 interface Licao {
     id: string;
@@ -108,35 +108,46 @@ const LicaoV = () => {
     // Renderizar a lição atual
     const renderCurrentLicao = () => {
         if (licoes.length === 0) return <Text>Nenhuma lição encontrada para esta unidade.</Text>;
-    
+
         const licao = licoes[currentIndex];
+        const temImagem = !!licao.imagem;
+        const temConteudo = !!licao.conteudo;
+
+        // Definir estilo dinâmico para a imagem e o conteúdo
+        const imageStyle = [
+            styles.image,
+            temImagem && temConteudo ? { height: '40%' } : { height: '80%' }
+        ];
+
+        const conteudoStyle = [
+            styles.licaoConteudo,
+            temImagem && temConteudo ? { flex: 1 } : { flex: 1, textAlign: 'center' }
+        ];
+
         return (
             <View style={styles.card}>
-                {/* Renderizar a imagem apenas se o campo imagem estiver preenchido */}
-                {licao.imagem ? (
-                    <Image source={{ uri: licao.imagem }} style={styles.image} />
-                ) : null}
-                <Text style={styles.licaoTitulo}>{licao.titulo}</Text>
-                <Text style={styles.licaoConteudo}>{licao.conteudo}</Text>
+                {/* Caso tenha só a imagem, o título vai acima da imagem */}
+                {temImagem && !temConteudo && <Text style={styles.licaoTitulo}>{licao.titulo}</Text>}
+                {temImagem && <Image source={{ uri: licao.imagem }} style={imageStyle} />}
+                {temConteudo && <Text style={styles.licaoTitulo}>{licao.titulo}</Text>}
+                {temConteudo && <Text style={conteudoStyle}>{licao.conteudo}</Text>}
             </View>
         );
     };
 
     return (
         <View style={styles.container}>
-            <NavBar
-                title='Unidades'
-            />
+            <HeaderBar title='Lições' backTo={`/unidades/unidadeV?id=${cursoId}`} />
             {renderCurrentLicao()}
 
             <View style={styles.navigation}>
-                <Button title="Anterior" onPress={handlePrevious} disabled={currentIndex === 0} />
+                <CustomButton title="Anterior" onPress={handlePrevious} disabled={currentIndex === 0} />
                 
                 {/* Se for a última lição, exibe "Finalizar", senão "Próximo" */}
                 {currentIndex === licoes.length - 1 ? (
-                    <Button title="Finalizar" onPress={handleFinalizar} />
+                    <CustomButton title="Finalizar" onPress={handleFinalizar} />
                 ) : (
-                    <Button title="Próximo" onPress={handleNext} />
+                    <CustomButton title="Próximo" onPress={handleNext} />
                 )}
             </View>
         </View>
@@ -149,7 +160,7 @@ const styles = StyleSheet.create({
         padding: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#f8f8f8',
+        backgroundColor: '#6ddbd7',
     },
     card: {
         flex: 1,
@@ -166,25 +177,26 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
-        height: 300,
         marginBottom: 16,
         borderRadius: 8,
     },
     licaoTitulo: {
-        fontSize: 22,
+        fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 16,
     },
     licaoConteudo: {
-        fontSize: 16,
+        fontSize: 20,
         color: '#666',
         textAlign: 'center',
+        flex: 1, // Permite flexibilidade ao ocupar o espaço disponível
     },
     navigation: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         width: '100%',
-        paddingVertical: 16,
+        paddingVertical: 18,
+        paddingHorizontal: 18,
         position: 'absolute',
         bottom: 10,
     },
