@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { db } from '../../config/firebase-config';
 import { collection, query, where, getDocs, getDoc, doc, orderBy, updateDoc } from 'firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -11,7 +11,6 @@ interface Licao {
     titulo: string;
     conteudo: string;
     unidade: string;
-    imagem: string;
 }
 
 const LicaoV = () => {
@@ -110,27 +109,11 @@ const LicaoV = () => {
         if (licoes.length === 0) return <Text>Nenhuma lição encontrada para esta unidade.</Text>;
 
         const licao = licoes[currentIndex];
-        const temImagem = !!licao.imagem;
-        const temConteudo = !!licao.conteudo;
-
-        // Definir estilo dinâmico para a imagem e o conteúdo
-        const imageStyle = [
-            styles.image,
-            temImagem && temConteudo ? { height: '40%' } : { height: '80%' }
-        ];
-
-        const conteudoStyle = [
-            styles.licaoConteudo,
-            temImagem && temConteudo ? { flex: 1 } : { flex: 1, textAlign: 'center' }
-        ];
 
         return (
             <View style={styles.card}>
-                {/* Caso tenha só a imagem, o título vai acima da imagem */}
-                {temImagem && !temConteudo && <Text style={styles.licaoTitulo}>{licao.titulo}</Text>}
-                {temImagem && <Image source={{ uri: licao.imagem }} style={imageStyle} />}
-                {temConteudo && <Text style={styles.licaoTitulo}>{licao.titulo}</Text>}
-                {temConteudo && <Text style={conteudoStyle}>{licao.conteudo}</Text>}
+                <Text style={styles.licaoTitulo}>{licao.titulo}</Text>
+                <Text style={styles.licaoConteudo}>{licao.conteudo}</Text>
             </View>
         );
     };
@@ -175,11 +158,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.1,
         shadowRadius: 5,
     },
-    image: {
-        width: '100%',
-        marginBottom: 16,
-        borderRadius: 8,
-    },
     licaoTitulo: {
         fontSize: 24,
         fontWeight: 'bold',
@@ -189,7 +167,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
         color: '#666',
         textAlign: 'center',
-        flex: 1, // Permite flexibilidade ao ocupar o espaço disponível
+        flex: 1,
     },
     navigation: {
         flexDirection: 'row',
