@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         padding: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#6ddbd7',
+        backgroundColor: '#a9efef',
     },
     card: {
         flex: 1,

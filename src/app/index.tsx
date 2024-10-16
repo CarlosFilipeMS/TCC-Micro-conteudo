@@ -3,7 +3,8 @@ import { View, Text, TouchableOpacity, FlatList, StyleSheet, Image } from 'react
 import { db } from '../config/firebase-config';
 import { collection, getDocs } from 'firebase/firestore';
 import { useRouter } from 'expo-router';
-import { getAuth, onAuthStateChanged } from 'firebase/auth'; // Importação para autenticação
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import LogoutButton from '../components/botaoLogout';
 
 interface Curso {
   id: string;
@@ -55,6 +56,7 @@ const CursosList = () => {
 
   return (
     <View style={styles.container}>
+      <LogoutButton/>
       <View style={styles.logoDiv}>
         <Image source={require('../../assets/logo/logo.png')} />
       </View>
@@ -73,16 +75,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#6ddbd7',
+    backgroundColor: '#a9efef',
   },
   logoDiv:{
     width: '100%',
     height: '50%',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  logo:{
-    
   },
   card: {
     backgroundColor: '#fff',
@@ -93,7 +92,8 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
-    alignItems: 'center'
+    alignItems: 'center',
+    height: 140
   },
   cursoNome: {
     fontSize: 18,

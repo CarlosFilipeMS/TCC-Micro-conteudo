@@ -45,7 +45,6 @@ export default function Cadastroscreen(props: CadastroscreenProps) {
       );
       router.push('auth/login')
       alert('Conta criada com sucesso!')
-      // Navegar para outra tela ou exibir mensagem de sucesso
 
     } catch (error) {
       alert('Falha ao criar conta!')
@@ -57,8 +56,8 @@ export default function Cadastroscreen(props: CadastroscreenProps) {
       <HeaderBar title=''/>
       <View style={styles.content}>
         <View style={styles.cabecalho}>
-          <View style={styles.authIconView}>
-            <Image style={styles.authIcon} source={require('../../../assets/logo/logo.png')} />
+          <View style={styles.logoView}>
+            <Image style={styles.logo} source={require('../../../assets/logo/logo.png')} />
           </View>
           <Text style={styles.titlePage}>Cadastro</Text>
         </View>
@@ -121,7 +120,7 @@ const styles = StyleSheet.create({
   background: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#6ddbd7',
+    backgroundColor: '#a9efef',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -137,13 +136,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  authIconView: {
+  logoView: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 200,
     height: 200,
   },
-  authIcon: {
+  logo: {
     alignItems: 'center',
     width: '200%',
     height: '200%',

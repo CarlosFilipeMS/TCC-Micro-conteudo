@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import CustomButton from '../../components/botao';
 import { auth } from '../../config/firebase-config';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 interface FormValues {
   email: string;
@@ -50,8 +50,8 @@ export default function LoginScreen(props: LoginScreenProps) {
     <View style={styles.background}>
       <View style={styles.content}>
         <View style={styles.cabecalho}>
-          <View style={styles.authIconView}>
-            <Image style={styles.authIcon} source={require('../../../assets/logo/logo.png')} />
+          <View style={styles.logoView}>
+            <Image style={styles.logo} source={require('../../../assets/logo/logo.png')} />
           </View>
           <Text style={styles.titlePage}>Login</Text>
         </View>
@@ -90,13 +90,17 @@ export default function LoginScreen(props: LoginScreenProps) {
 
                 <CustomButton onPress={handleSubmit as any} title="Entrar" color="black" />
                 
-                {/* Botão de Cadastro */}
                 <TouchableOpacity 
                   style={styles.registerButton} 
                   onPress={() => router.push('/auth/cadastro')}
                 >
                   <Text style={styles.registerText}>Cadastrar</Text>
                 </TouchableOpacity>
+                <View style={styles.linkRecuperar}>
+                  <Link href="/auth/recuperar">
+                    <Text style={styles.textoLinkRecuperar}>Esqueci minha senha</Text>
+                  </Link>
+                </View>
               </View>
             )}
           </Formik>
@@ -110,7 +114,7 @@ const styles = StyleSheet.create({
   background: {
     width: '100%',
     height: '100%',
-    backgroundColor: '#6ddbd7',
+    backgroundColor: '#a9efef',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -119,6 +123,16 @@ const styles = StyleSheet.create({
     height: '90%',
     alignItems: 'center',
   },
+  linkRecuperar: {
+    marginTop: 8,
+    padding: 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textoLinkRecuperar: {
+    fontWeight: 'bold',
+    fontSize: 15
+  },
   cabecalho: {
     width: '100%',
     height: '40%',
@@ -126,17 +140,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  textLogo: {
-    fontSize: 45,
-    fontWeight: 'bold',
-  },
-  authIconView: {
+  logoView: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 200,
     height: 200,
   },
-  authIcon: {
+  logo: {
     alignItems: 'center',
     width: '200%',
     height: '200%',

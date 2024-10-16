@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Para ícones
 import { useRouter } from 'expo-router';
+import LogoutButton from './botaoLogout';
 
 interface HeaderBarProps {
   title: string;
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#6ddbd7',
+    backgroundColor: '#a9efef',
     height: 60,
     justifyContent: 'space-between',
   },
