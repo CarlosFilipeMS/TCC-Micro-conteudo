@@ -12,7 +12,7 @@ const LogoutButton: React.FC = () => {
   // Função para logout
   const handleLogout = async () => {
     try {
-      await signOut(auth); // Logout do Firebase
+      await signOut(auth); 
       router.push('/auth/login'); // Redireciona para a tela de login
     } catch (error) {
       console.error('Erro ao fazer logout:', error);

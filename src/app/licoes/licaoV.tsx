@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Image } from 'react-native';
 import { db } from '../../config/firebase-config';
 import { collection, query, where, getDocs, getDoc, doc, orderBy, updateDoc } from 'firebase/firestore';
 import { useLocalSearchParams, useRouter } from 'expo-router';
@@ -11,6 +11,7 @@ interface Licao {
     titulo: string;
     conteudo: string;
     unidade: string;
+    imagemUrl?: string; // Alterado para imagemUrl
 }
 
 const LicaoV = () => {
@@ -109,9 +110,19 @@ const LicaoV = () => {
         if (licoes.length === 0) return <Text>Nenhuma lição encontrada para esta unidade.</Text>;
 
         const licao = licoes[currentIndex];
+        console.log(licao); // Verifique se a imagemUrl está presente
 
         return (
             <View style={styles.card}>
+                {licao.imagemUrl ? ( // Alterado para imagemUrl
+                    <Image
+                        source={{ uri: licao.imagemUrl }} // Alterado para imagemUrl
+                        style={styles.imagemLicao}
+                        onError={(e) => console.log('Erro ao carregar a imagem: ', e.nativeEvent.error)} // Log de erro
+                    />
+                ) : (
+                    <Text>Imagem não disponível</Text>
+                )}
                 <Text style={styles.licaoTitulo}>{licao.titulo}</Text>
                 <Text style={styles.licaoConteudo}>{licao.conteudo}</Text>
             </View>
@@ -126,7 +137,6 @@ const LicaoV = () => {
             <View style={styles.navigation}>
                 <CustomButton title="Anterior" onPress={handlePrevious} disabled={currentIndex === 0} />
                 
-                {/* Se for a última lição, exibe "Finalizar", senão "Próximo" */}
                 {currentIndex === licoes.length - 1 ? (
                     <CustomButton title="Finalizar" onPress={handleFinalizar} />
                 ) : (
@@ -157,6 +167,12 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 5,
+    },
+    imagemLicao: {
+        width: 200,
+        height: 200,
+        borderRadius: 8,
+        marginTop: 20,
     },
     licaoTitulo: {
         fontSize: 26,
