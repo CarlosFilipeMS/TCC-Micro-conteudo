@@ -17,7 +17,9 @@ interface Licao {
 const LicaoV = () => {
     const { id, cursoId } = useLocalSearchParams();
     const [licoes, setLicoes] = useState<Licao[]>([]);
-    const [currentIndex, setCurrentIndex] = useState(0); 
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isLoading, setIsLoading] = useState(true); // Carregamento da lista de lições
+    const [isContentLoading, setIsContentLoading] = useState(true); // Carregamento do conteúdo da lição
     const router = useRouter();
 
     // Fetch das lições de uma unidade
@@ -39,8 +41,10 @@ const LicaoV = () => {
                 } as Licao));
 
                 setLicoes(licoesList);
+                setIsLoading(false); // Termina o carregamento da lista de lições
             } catch (error) {
                 console.error('Erro ao buscar lições: ', error);
+                setIsLoading(false); // Em caso de erro, termina o carregamento
             }
         }
     };
@@ -48,6 +52,15 @@ const LicaoV = () => {
     useEffect(() => {
         fetchLicoes();
     }, [id]);
+
+    useEffect(() => {
+        // Simular um atraso de 1-2 segundos antes de mostrar o conteúdo
+        const timer = setTimeout(() => {
+            setIsContentLoading(false); // Define o conteúdo como carregado após o atraso
+        }, 1500); // Atraso de 1.5 segundos
+
+        return () => clearTimeout(timer); // Limpa o timer quando o componente for desmontado
+    }, [licoes]);
 
     // Calcular o progresso
     const calcularProgresso = () => {
@@ -107,24 +120,33 @@ const LicaoV = () => {
 
     // Renderizar a lição atual
     const renderCurrentLicao = () => {
+        if (isLoading) {
+            return <Text>Carregando lições...</Text>; // Exibe mensagem de carregamento enquanto as lições estão sendo carregadas
+        }
+
         if (licoes.length === 0) return <Text>Nenhuma lição encontrada para esta unidade.</Text>;
 
         const licao = licoes[currentIndex];
-        console.log(licao); // Verifique se a imagemUrl está presente
 
         return (
             <View style={styles.card}>
-                {licao.imagemUrl ? ( // Alterado para imagemUrl
-                    <Image
-                        source={{ uri: licao.imagemUrl }} // Alterado para imagemUrl
-                        style={styles.imagemLicao}
-                        onError={(e) => console.log('Erro ao carregar a imagem: ', e.nativeEvent.error)} // Log de erro
-                    />
+                {isContentLoading ? ( // Exibe um indicador de carregamento ou um texto enquanto espera
+                    <Text>Carregando conteúdo...</Text>
                 ) : (
-                    <Text>Imagem não disponível</Text>
+                    <>
+                        {licao.imagemUrl ? ( // Alterado para imagemUrl
+                            <Image
+                                source={{ uri: licao.imagemUrl }} // Alterado para imagemUrl
+                                style={styles.imagemLicao}
+                                onError={(e) => console.log('Erro ao carregar a imagem: ', e.nativeEvent.error)} // Log de erro
+                            />
+                        ) : (
+                            <Text>Imagem não disponível</Text>
+                        )}
+                        <Text style={styles.licaoTitulo}>{licao.titulo}</Text>
+                        <Text style={styles.licaoConteudo}>{licao.conteudo}</Text>
+                    </>
                 )}
-                <Text style={styles.licaoTitulo}>{licao.titulo}</Text>
-                <Text style={styles.licaoConteudo}>{licao.conteudo}</Text>
             </View>
         );
     };

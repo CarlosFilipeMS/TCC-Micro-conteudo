@@ -14,6 +14,8 @@ interface Curso {
 
 const CursosList = () => {
   const [cursos, setCursos] = useState<Curso[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Estado para controlar o carregamento
+  const [noCursosMessage, setNoCursosMessage] = useState(false); // Estado para a mensagem de "nenhum curso"
   const router = useRouter();
   const auth = getAuth();
 
@@ -25,6 +27,7 @@ const CursosList = () => {
       ...doc.data(),
     } as Curso));
     setCursos(cursosList);
+    setIsLoading(false); // Define que o carregamento foi concluído
   };
 
   useEffect(() => {
@@ -43,6 +46,17 @@ const CursosList = () => {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    // Espera 10 segundos para exibir a mensagem "Nenhum curso encontrado"
+    const timer = setTimeout(() => {
+      if (cursos.length === 0 && isLoading) {
+        setNoCursosMessage(true);
+      }
+    }, 10000); // 10 segundos
+
+    return () => clearTimeout(timer); // Limpar o timer quando o componente for desmontado
+  }, [cursos, isLoading]);
+
   // Renderizar os cards clicáveis e passar o ID do curso
   const renderCursoCard = ({ item }: { item: Curso }) => (
     <TouchableOpacity 
@@ -56,17 +70,23 @@ const CursosList = () => {
 
   return (
     <View style={styles.container}>
-      <LogoutButton/>
+      <LogoutButton />
       <View style={styles.logoDiv}>
-        <Image source={require('../../assets/logo/logo.png')} />
+        <Image 
+          source={require('../../assets/logo/logo.png')} 
+          style={styles.logo} 
+        />
       </View>
-      <View>
+      {noCursosMessage ? (
+        <Text style={styles.emptyMessage}>Nenhum curso encontrado.</Text>
+      ) : (
         <FlatList
           data={cursos}
           keyExtractor={(item) => item.id}
           renderItem={renderCursoCard}
+          contentContainerStyle={styles.flatListContent}
         />
-      </View>
+      )}
     </View>
   );
 };
@@ -77,32 +97,52 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: '#a9efef',
   },
-  logoDiv:{
+  logoDiv: {
     width: '100%',
-    height: '50%',
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    height: 200,
+    marginTop: 60, 
+    marginBottom: 20,
+  },
+  logo: {
+    width: 450,
+    height: 450,  
+    resizeMode: 'contain',
   },
   card: {
     backgroundColor: '#fff',
-    padding: 16,
+    padding: 18,
     marginBottom: 16,
     borderRadius: 8,
-    shadowColor: '#adec94',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 5,
+    elevation: 3, // Para sombra em dispositivos Android
     alignItems: 'center',
-    height: 140
+    width: '100%', 
+    height: 140,
   },
   cursoNome: {
     fontSize: 18,
     fontWeight: 'bold',
+    textAlign: 'center', 
     marginBottom: 8,
   },
   cursoResumo: {
     fontSize: 14,
     color: '#666',
+    textAlign: 'center',
+  },
+  flatListContent: {
+    paddingBottom: 16,
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#555',
   },
 });
 

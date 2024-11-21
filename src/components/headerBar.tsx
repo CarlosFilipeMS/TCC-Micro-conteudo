@@ -39,6 +39,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#a9efef',
     height: 60,
     justifyContent: 'space-between',
+    marginBottom: 2,
   },
   backButton: {
     padding: 3,

@@ -16,6 +16,8 @@ interface Unidade {
 const UnidadeV = () => {
   const { id } = useLocalSearchParams(); 
   const [unidades, setUnidades] = useState<Unidade[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // Estado para controle de carregamento
+  const [noUnidadesMessage, setNoUnidadesMessage] = useState(false); // Estado para a mensagem de "nenhuma unidade"
   const router = useRouter();
 
   const fetchUnidades = async () => {
@@ -33,12 +35,24 @@ const UnidadeV = () => {
         ...doc.data(),
       } as Unidade));
       setUnidades(unidadesList);
+      setIsLoading(false); // Carregamento concluído
     }
   };
 
   useEffect(() => {
     fetchUnidades();
   }, [id]);
+
+  useEffect(() => {
+    // Espera 10 segundos para exibir a mensagem "Nenhuma unidade encontrada"
+    const timer = setTimeout(() => {
+      if (unidades.length === 0 && isLoading) {
+        setNoUnidadesMessage(true);
+      }
+    }, 10000); // 10 segundos
+
+    return () => clearTimeout(timer); // Limpar o timer quando o componente for desmontado
+  }, [unidades, isLoading]);
 
   const renderUnidadeItem = ({ item }: { item: Unidade }) => (
     <TouchableOpacity 
@@ -62,15 +76,15 @@ const UnidadeV = () => {
 
   return (
     <View style={styles.container}>
-      <HeaderBar title='Unidades' backTo='/'/>
-      {unidades.length > 0 ? (
+      <HeaderBar title='Unidades' backTo='/' />
+      {noUnidadesMessage ? (
+        <Text style={styles.emptyMessage}>Nenhuma unidade encontrada para este curso.</Text>
+      ) : (
         <FlatList
           data={unidades}
           keyExtractor={(item) => item.id}
           renderItem={renderUnidadeItem}
         />
-      ) : (
-        <Text>Nenhuma unidade encontrada para este curso.</Text>
       )}
     </View>
   );
@@ -85,12 +99,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     padding: 16,
-    marginBottom: 16,
-    borderRadius: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 5,
+    marginTop: 16,
+    elevation: 3
   },
   unidadeNome: {
     fontSize: 18,
@@ -105,6 +115,12 @@ const styles = StyleSheet.create({
   },
   progressBar: {
     height: 3, 
+  },
+  emptyMessage: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#555',
   },
 });
 
