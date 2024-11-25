@@ -101,13 +101,13 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 200,
+    height: 250,
     marginTop: 60, 
     marginBottom: 20,
   },
   logo: {
-    width: 450,
-    height: 450,  
+    width: 350,
+    height: 350,  
     resizeMode: 'contain',
   },
   card: {
